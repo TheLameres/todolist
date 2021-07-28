@@ -1,43 +1,27 @@
 package thelameres.todolist.core.services;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.stereotype.Component;
 import thelameres.todolist.core.data.models.Task;
-import thelameres.todolist.core.repositories.TaskRepository;
 
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Stream;
 
-@Component
-public class TaskService {
-    TaskRepository taskRepository;
+public interface TaskService {
+    Stream<Task> findAll(int offset, int limit);
 
-    @Autowired
-    public TaskService(TaskRepository taskRepository) {
-        this.taskRepository = taskRepository;
-    }
+    Task findById(UUID uuid);
 
-    public Stream<Task> findAll(int offset, int limit) {
-        return taskRepository.findAll(PageRequest.of(offset, limit)).stream();
-    }
-    public List<Task> findAll1() {
-        return taskRepository.findAll();
-    }
+    Task findByName(String name);
 
-    public int count() {
-        return (int) taskRepository.count();
-    }
+    List<Task> findAll();
 
-    public Task save(Task task) {
-        return taskRepository.save(task);
-    }
+    int count();
 
-    public Task updata(Task task){
-        return taskRepository.save(task);
-    }
+    Task save(Task task);
 
-    public void delete(Task task){
-        taskRepository.delete(task);
-    }
+    Task update(Task task);
+
+    void delete(Task task);
+
+    void deleteById(UUID uuid);
 }

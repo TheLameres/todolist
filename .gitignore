@@ -34,5 +34,6 @@ build/
 
 ### JPA Buddy ###
 .jpb
+*.db
 
 

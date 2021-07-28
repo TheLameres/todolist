@@ -6,7 +6,6 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.GenericFilterBean;
-import thelameres.todolist.core.data.models.JPAUserDetails;
 import thelameres.todolist.core.services.auth.JPAUserDetailService;
 import thelameres.todolist.core.services.auth.JwtService;
 
@@ -36,7 +35,7 @@ public class JwtFilter extends GenericFilterBean {
         String token = getTokenFromRequest((HttpServletRequest) servletRequest);
         if (token != null && jwtService.validateToken(token)) {
             String userLogin = jwtService.getLoginFromToken(token);
-            JPAUserDetails customUserDetails = jpaUserDetailService.loadUserByUsername(userLogin);
+            var customUserDetails = jpaUserDetailService.loadUserByUsername(userLogin);
             log.info("Getting {} from user {}", ((HttpServletRequest) servletRequest).getRequestURI(), customUserDetails.getUsername());
             UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken(customUserDetails, null, customUserDetails.getAuthorities());
             SecurityContextHolder.getContext().setAuthentication(auth);

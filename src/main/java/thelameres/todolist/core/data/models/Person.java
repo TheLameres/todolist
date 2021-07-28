@@ -1,41 +1,29 @@
 package thelameres.todolist.core.data.models;
 
 import lombok.*;
-import org.hibernate.Hibernate;
-import org.hibernate.validator.constraints.Length;
 
-import javax.persistence.*;
-import javax.validation.constraints.NotNull;
+import javax.persistence.Column;
+import javax.persistence.Embeddable;
+import java.time.LocalDate;
 
-@Table(name = "PERSON")
-@Entity
+@Embeddable
 @Getter
 @Setter
 @ToString(callSuper = true)
 @Builder
 @RequiredArgsConstructor
 @AllArgsConstructor
-public class Person extends SuperEntity {
-    @Length(message = "Name must be >2 and <20", min = 2, max = 20)
-    @NotNull(message = "Name must be not null")
-    @Column(name = "NAME")
-    private String name;
+public class Person {
 
-    @JoinColumn(name = "USER_ID")
-    @OneToOne(orphanRemoval = true)
-    private User user;
+    @Column(name = "FIRST_NAME")
+    private String firstName;
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) return false;
-        Person person = (Person) o;
+    @Column(name = "LAST_NAME")
+    private String lastName;
 
-        return id != null && id.equals(person.id);
-    }
+    @Column(name = "BIRTH_DATE")
+    private LocalDate birthDate;
 
-    @Override
-    public int hashCode() {
-        return 1422108840;
-    }
+    @Column(name = "POSITION")
+    private String position;
 }

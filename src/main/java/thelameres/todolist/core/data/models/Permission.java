@@ -1,5 +1,6 @@
 package thelameres.todolist.core.data.models;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.*;
 
 import javax.persistence.Entity;
@@ -16,9 +17,10 @@ import java.util.List;
 @ToString
 @Builder
 public class Permission extends SuperEntity {
-    String permission;
+    String name;
 
     @ManyToMany(mappedBy = "permissions")
     @ToString.Exclude
+    @JsonBackReference
     private List<Role> roles;
 }

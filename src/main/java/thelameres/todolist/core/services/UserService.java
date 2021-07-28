@@ -1,63 +1,35 @@
 package thelameres.todolist.core.services;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.stereotype.Service;
 import thelameres.todolist.core.data.models.User;
 import thelameres.todolist.core.data.responses.AuthRequest;
 import thelameres.todolist.core.data.responses.RegistrationRequest;
-import thelameres.todolist.core.repositories.RoleRepository;
-import thelameres.todolist.core.repositories.UserRepository;
 
-import javax.persistence.EntityNotFoundException;
 import javax.validation.constraints.NotNull;
+import java.time.LocalDate;
+import java.util.List;
 import java.util.UUID;
 
-@Service
-public class UserService {
-    @Autowired
-    private UserRepository userRepository;
+public interface UserService {
+    User getUserById(UUID uuid);
 
-    @Autowired
-    private RoleRepository roleRepository;
+    List<User> getAllUsers();
 
-    @Autowired
-    private PasswordEncoder passwordEncoder;
+    User findById(UUID uuid);
 
+    User findByLogin(String login);
 
-    public User getUserById(UUID uuid) {
-        return userRepository.findById(uuid).orElseThrow(EntityNotFoundException::new);
-    }
+    User findByLoginAndPassword(String login, String password);
 
-    public User findByLogin(String login) {
-        return userRepository.findByUsername(login).orElseThrow(EntityNotFoundException::new);
-    }
+    User findByLoginAndPassword(AuthRequest authRequest);
 
-    public User findByLoginAndPassword(String login, String password) {
-        User user = findByLogin(login);
-        if (user != null) {
-            if (passwordEncoder.matches(password, user.getPassword())) {
-                return user;
-            }
-        }
-        return null;
-    }
+    User save(@NotNull String username, @NotNull String password, @NotNull String email,
+              String firstName, String lastName, LocalDate birthDate, String position);
 
-    public User findByLoginAndPassword(AuthRequest authRequest) {
-        return findByLoginAndPassword(authRequest.getLogin(), authRequest.getPassword());
-    }
+    User save(RegistrationRequest request);
 
-    public User save(@NotNull String username, @NotNull String password, @NotNull String email) {
-        return userRepository.save(User.builder()
-                .username(username)
-                .password(passwordEncoder.encode(password))
-                .email(email)
-                .role(roleRepository.findByRole("user")
-                                .orElseThrow(EntityNotFoundException::new))
-                .enabled(true).build());
-    }
+    User save(User user);
 
-    public User save(RegistrationRequest request) {
-        return save(request.getUsername(), request.getPassword(), request.getEmail());
-    }
+    void delete(UUID uuid);
+
+    long count();
 }
